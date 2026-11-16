@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بوابة القمر لموكتيي 🌙✨</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg1: #090212;
+  --bg2: #190928;
+  --accent: #ff4d8d;
+  --accent2: #ff9a76;
+  --gold: #f4d06f;
+  --glass: rgba(255, 255, 255, 0.06);
+  --border: rgba(255, 255, 255, 0.12);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Cairo', sans-serif;
+  background: radial-gradient(circle at center, #230e33 0%, var(--bg1) 85%);
+  color: #fff5f8;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* خلفية النجوم بالعرض */
+#particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle var(--d) infinite ease-in-out;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.1; transform: scale(0.7); }
+  50% { opacity: 1; transform: scale(1.3); }
+}
+
+.floating-heart {
+  position: absolute;
+  bottom: -40px;
+  animation: floatUp linear forwards;
+  filter: drop-shadow(0 0 8px rgba(255, 77, 141, 0.6));
+}
+
+@keyframes floatUp {
+  to {
+    transform: translateY(-110vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* شاشة القمر بالعرض */
+.moon-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 60px;
+  padding: 40px;
+  position: relative;
+  z-index: 2;
+}
+
+@media(max-width: 850px) {
+  .moon-screen {
+    flex-direction: column;
+    text-align: center;
+    gap: 30px;
+  }
+}
+
+/* شكل القمر الواقعي القابل للضغط */
+.moon-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.4s ease;
+}
+
+.moon-container:hover {
+  transform: scale(1.08);
+}
+
+.realistic-moon {
+  width: 190px;
+  height: 190px;
+  background: radial-gradient(circle at 35% 35%, #fffef4 0%, #e6d794 50%, #b89b47 90%);
+  border-radius: 50%;
+  box-shadow: 0 0 60px rgba(244, 208, 111, 0.4), inset -20px -20px 40px rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.realistic-moon::before {
+  content: "";
+  position: absolute;
+  top: 30px;
+  left: 40px;
+  width: 35px;
+  height: 30px;
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 50%;
+  box-shadow: 40px 50px 0 -5px rgba(0,0,0,0.1), -10px 70px 0 5px rgba(0,0,0,0.08);
+}
+
+.moon-hint {
+  font-size: 15px;
+  color: var(--gold);
+  margin-top: 15px;
+  letter-spacing: 1px;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* صندوق الباسورد (مخفي لحين الضغط على القمر) */
+.password-box {
+  display: none;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  padding: 35px;
+  border-radius: 28px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+  max-width: 400px;
+  width: 100%;
+  animation: fadeIn 0.6s ease;
+}
+
+.password-box h3 {
+  color: var(--gold);
+  margin-bottom: 15px;
+  font-size: 20px;
+}
+
+.password-box input {
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 30px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(0,0,0,0.3);
+  color: white;
+  text-align: center;
+  font-size: 17px;
+  font-family: inherit;
+  outline: none;
+  margin-bottom: 15px;
+}
+
+.password-box input:focus {
+  border-color: var(--accent);
+}
+
+.error-msg {
+  color: #ff6b6b;
+  font-size: 14px;
+  margin-top: 8px;
+  display: none;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* الموقع الرئيسي */
+#main {
+  display: none;
+  position: relative;
+  z-index: 2;
+  max-width: 720px;
+  margin: auto;
+  padding: 50px 18px 80px;
+  text-align: center;
+  animation: fadeIn 1s ease;
+}
+
+.header-badge {
+  display: inline-block;
+  background: rgba(255, 209, 102, 0.15);
+  border: 1px solid rgba(255, 209, 102, 0.4);
+  color: var(--gold);
+  padding: 6px 18px;
+  border-radius: 30px;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.card-section {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  padding: 32px 22px;
+  margin: 28px 0;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), var(--gold), transparent);
+}
+
+.card-section h2 {
+  color: var(--gold);
+  font-size: 22px;
+  margin-bottom: 18px;
+}
+
+.message {
+  font-family: 'Cairo', sans-serif;
+  font-size: 19px;
+  line-height: 2.1;
+  white-space: pre-line;
+  min-height: 120px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  border-radius: 18px;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+}
+
+.envelope-wrapper {
+  margin: 30px auto 15px;
+  cursor: pointer;
+  display: inline-block;
+  transition: transform 0.3s;
+}
+
+.envelope-wrapper:hover {
+  transform: scale(1.05);
+}
+
+.envelope {
+  width: 200px;
+  height: 130px;
+  background: linear-gradient(135deg, #ff4d8d, #c9184a);
+  position: relative;
+  border-radius: 10px;
+  box-shadow: 0 15px 30px rgba(201, 24, 74, 0.4);
+}
+
+.envelope:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-left: 100px solid transparent;
+  border-right: 100px solid transparent;
+  border-top: 80px solid #ff75a0;
+  transform-origin: top;
+  transition: 0.6s ease;
+  z-index: 2;
+  border-radius: 10px 10px 0 0;
+}
+
+.envelope.open:before {
+  transform: rotateX(180deg);
+}
+
+.wax-seal {
+  position: absolute;
+  top: 52px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 44px;
+  height: 44px;
+  background: var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  z-index: 3;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: opacity 0.3s;
+}
+
+.envelope.open .wax-seal {
+  opacity: 0;
+}
+
+.letter {
+  display: none;
+  background: linear-gradient(180deg, #fff9fb, #ffeef4);
+  color: #4a152c;
+  border-radius: 20px;
+  padding: 26px 20px;
+  margin-top: 22px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.7s ease;
+}
+
+.letter.show {
+  display: block;
+}
+
+.letter p {
+  color: #4a152c;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 2;
+}
+
+.final {
+  display: none;
+  margin-top: 25px;
+  padding: 24px;
+  background: rgba(255, 77, 141, 0.15);
+  border: 1px solid rgba(255, 77, 141, 0.4);
+  border-radius: 22px;
+  animation: fadeIn 0.8s ease;
+}
+
+.final h2 {
+  font-family: 'Aref Ruqaa', serif;
+  font-size: 32px;
+  color: #ff85b3;
+  margin-bottom: 10px;
+}
+
+.final p {
+  font-size: 18px;
+  color: #fff;
+}
+
+.btn {
+  border: none;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: white;
+  padding: 14px 30px;
+  border-radius: 50px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 10px;
+  box-shadow: 0 10px 25px rgba(255, 77, 141, 0.45);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-3px) scale(1.03);
+}
+
+.music {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: rgba(255, 77, 141, 0.85);
+  backdrop-filter: blur(8px);
+  color: white;
+  font-size: 20px;
+  z-index: 10;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  transition: transform 0.2s;
+}
+
+.music:hover {
+  transform: scale(1.1);
+}
+
+footer {
+  margin-top: 40px;
+  color: #b892a4;
+  font-size: 13px;
+  text-align: center;
+}
+</style>
+</head>
+
+<body>
+
+<div id="particles"></div>
+
+<!-- شاشة القمر بالعرض -->
+<section class="moon-screen" id="moonScreen">
+  <div class="moon-container" onclick="showPasswordPrompt()">
+    <div class="realistic-moon"></div>
+    <div class="moon-hint"></div>
+  </div>
+
+  <div class="password-box" id="passwordBox">
+    <h3>دخلي الكلمة السرية يا موكتي 🤍</h3>
+    <input type="password" id="passInput" placeholder="اكتبي الباسورد هنا...">
+    <button class="btn" onclick="checkPassword()">دخول ✨</button>
+    <div class="error-msg" id="errorMsg">الباسورد غلط يا سيدي، جربي تاني! 🙈</div>
+  </div>
+</section>
+
+<!-- الموقع الرئيسي -->
+<main id="main">
+  <span class="header-badge">✨ مخصوص عشانك ✨</span>
+  <h1>موكتييي نن عيني</h1>
+  <p>
+    النهارده يوم عادي عند الناس كلها...
+    <br>
+    بس أنا قررت أخليه يوم مختلف ومميز عشانك. 🌷
+  </p>
+
+  <div class="card-section">
+    <h2>كلمتين من قلبي 💌</h2>
+    <div class="message" id="typing"></div>
+  </div>
+
+  <div class="card-section">
+    <h2>فيه جواب مستخبي ليكي 🎀</h2>
+    <p>دوسي على الختم الذهبي عشان تفتحي الجواب</p>
+
+    <div class="envelope-wrapper" onclick="openLetter()">
+      <div class="envelope" id="envelope">
+        <div class="wax-seal">❤️</div>
+      </div>
+    </div>
+
+    <div class="letter" id="letter">
+      <p>
+        يا موكتييي ❤️
+        <br><br>
+        عايزك تعرفي إني بحبك اوييي بحب فيكي  كل  تفصيلة بحب فيكي طبيعتك وكل حاجه،
+       بحب علاقتنا دي اوييييي بجد
+        وعاوز اقولك إن وجودك بيحلي دنيتي.
+        <br><br>
+        مش لازم يكون فيه مناسبة عشان أقولك كلام حلو،
+        ولا لازم يكون فيه سبب عشان أحب أشوفك مبسوطة.
+        <br><br>
+        أنا بس حبيت أعملك المفاجأة دي،
+        علشان أشوفك بتضحكي وتعرفي قد إيه إنتِ غالية عندي.
+        <br><br>
+        يا رب يخليكي ليا ينن عيني وبجد عاوز اقولك شكرا علشان انتي في حياتي. 🌸
+       <br><br>
+        ماليه عنيا وحياتي مدلعاني وحرفيا ولله بجد بهرب من الدنيا كلها وباجي ارتمي في حضنك انتي ي كل ما ليا
+        مش بحب ازعلك ولو قولت حاجه تزعل بدون قصدك اول كلمة بقولها علطول اني اسف علشان مش بحب ازعلك
+        مش بعرف انام او اسيبك تنامي وانتي زعلانهه يبتت ولله ,بحب حنيتك علياا اويي ربنا يخلينا لبعض ديما يعمري
+        <br><br>
+        "انتِ ملكي بعهد لا ينتهي إلا بانتهاء أنفاسي."
+        <br><br>
+        ❤️
+      </p>
+    </div>
+  </div>
+
+  <div class="card-section">
+    <div style="font-size:55px; margin-bottom:10px;">🎁</div>
+    <h2>استني.. المفاجأة لسه مخلصتش!</h2>
+    <p>
+      أمنيتي الوحيدة...
+      <br>
+      إنك تفضلي دايمًا في حياتيي وربنا ما يبعدنا عن بعض،
+       وان ربنا زي ما خلاني نعرف ونحب بعض يكملها علينا بالحلال يارببب.
+    </p>
+
+    <button class="btn" onclick="finalSurprise()">
+      دوسي هنا يا موكتيي 💗
+    </button>
+
+    <div class="final" id="final">
+      <h2>إنتِ حكاية حلوة قوي ❤️</h2>
+      <p>
+        وجودك لوحده كفاية يخلي الأيام تضحك ليا.
+        <br>
+        ودي كانت حتة مفاجأة صغنتوتة لعيونك.
+        <br><br>
+        🌷 بحب أشوفك مبسوطة وفرحانه كدا اوييي 🌷
+      </p>
+    </div>
+  </div>
+
+  <footer>
+    Made with Yassoftek
+    <br>
+    A special surprise for Moketyyy
+  </footer>
+</main>
+
+<!-- الموسيقى -->
+<audio id="music" loop>
+  <source src="https://files.catbox.moe/qt3gek.mp3" type="audio/mpeg">
+</audio>
+
+<button class="music" onclick="toggleMusic()" id="musicBtn" style="display:none;">
+  ♫
+</button>
+
+<script>
+// ✨ الباسورد
+const correctPassword = "moka"; 
+
+const message = `يا موكتيي يا قمر ❤️
+
+عارفة إيه؟
+
+مش لازم يكون فيه مناسبة عشان أعملك حركة حلوة،
+ولا لازم يكون فيه سبب عشان أقولك إني بحبكك اوووي.
+
+أنا صحيت النهارده وقلت لازم اخلكي مبسوطهه  
+قعدت افكر اعمل اي مختلف كدا لحد ما لقيت نفسي بعمل كدا.
+
+حبيت أعملك الصفحة دي مخصوص،
+وأخلي كل كلمة فيها تقولك قد إيه انا بحبك اووي.
+
+أتمنى تعجبك وإنتِ بتفتحيها،
+وتفضلي دايمًا منورة حياتي يكل ما ليا في الدنيا دي.
+
+دي حاجة كدا عملتها في يوم بس علشان حبيت افرحك شوية و اقولك اني بحبك اويي،
+بس يا رب تسيبلك ذكرى حلوة.
+
+يا أجمل واحن موكا في الدنيا دي كلها 💗`;
+
+// نجوم الخلفية بالعرض
+const particlesBox = document.getElementById("particles");
+for(let i = 0; i < 80; i++) {
+  const star = document.createElement("div");
+  star.className = "star";
+  const size = Math.random() * 3 + 1;
+  star.style.width = size + "px";
+  star.style.height = size + "px";
+  star.style.left = Math.random() * 100 + "%";
+  star.style.top = Math.random() * 100 + "%";
+  star.style.setProperty("--d", (Math.random() * 3 + 2) + "s");
+  particlesBox.appendChild(star);
+}
+
+// اظهار خانة الباسورد عند الضغط على القمر
+function showPasswordPrompt() {
+  document.querySelector('.moon-container').style.display = 'none';
+  document.getElementById('passwordBox').style.display = 'block';
+}
+
+// التحقق من الباسورد وتشغيل الأغنية تلقائياً
+function checkPassword() {
+  const inputVal = document.getElementById('passInput').value.trim();
+  const errorMsg = document.getElementById('errorMsg');
+
+  if(inputVal === correctPassword) {
+    document.getElementById('moonScreen').style.display = 'none';
+    document.getElementById('main').style.display = 'block';
+    document.getElementById('musicBtn').style.display = 'block';
+    window.scrollTo({top: 0, behavior: "smooth"});
+    
+    // تشغيل الأغنية تلقائياً
+    const music = document.getElementById("music");
+    music.play().then(() => {
+      playing = true;
+      document.getElementById("musicBtn").textContent = "❚❚";
+    }).catch(err => {
+      console.log("Autoplay blocked or waiting for interaction", err);
+    });
+
+    typeMessage();
+  } else {
+    errorMsg.style.display = 'block';
+  }
+}
+
+let started = false;
+function typeMessage() {
+  if(started) return;
+  started = true;
+  const box = document.getElementById("typing");
+  let i = 0;
+  function write() {
+    if(i < message.length) {
+      box.textContent += message.charAt(i);
+      let delay = message.charAt(i) === "\n" ? 220 : 55;
+      i++;
+      setTimeout(write, delay);
+    }
+  }
+  write();
+}
+
+function openLetter() {
+  document.getElementById("envelope").classList.add("open");
+  setTimeout(() => {
+    document.getElementById("letter").classList.add("show");
+  }, 350);
+}
+
+function finalSurprise() {
+  const finalBox = document.getElementById("final");
+  finalBox.style.display = "block";
+
+  for(let i = 0; i < 40; i++) {
+    setTimeout(createHeart, i * 65);
+  }
+
+  finalBox.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+}
+
+function createHeart() {
+  const heart = document.createElement("div");
+  heart.className = "floating-heart";
+  const icons = ["💗", "💖", "✨", "❤️", "🌸", "💓"];
+  heart.textContent = icons[Math.floor(Math.random() * icons.length)];
+  heart.style.left = Math.random() * 100 + "%";
+  heart.style.fontSize = (16 + Math.random() * 24) + "px";
+  const duration = 5 + Math.random() * 5;
+  heart.style.animationDuration = duration + "s";
+  particlesBox.appendChild(heart);
+  setTimeout(() => heart.remove(), duration * 1000);
+}
+
+setInterval(createHeart, 650);
+
+let playing = false;
+function toggleMusic() {
+  const music = document.getElementById("music");
+  if(!playing) {
+    music.play().then(() => {
+      playing = true;
+      document.getElementById("musicBtn").textContent = "❚❚";
+    });
+  } else {
+    music.pause();
+    playing = false;
+    document.getElementById("musicBtn").textContent = "♫";
+  }
+}
+</script>
+
+</body>
+</html>
